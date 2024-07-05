@@ -1,0 +1,65 @@
+# antes de iniciar instales os pacotes nas pastas
+
+cd app1
+npm install express kafkajs pg sequelize
+
+cd app2
+npm install express kafkajs mongoose
+
+# para contruir os container
+docker-compose up --build
+
+# Verificar Permissões dos Volumes
+sudo chown -R 472:472 ./data/grafana
+sudo chown -R 999:999 ./data/postgres
+sudo chown -R 999:999 ./data/mongo
+
+# Após iniciar os contêineres, as APIs estarão rodando nas seguintes portas:
+
+App1: http://localhost:8080
+App2: http://localhost:8081
+
+# Abra o terminal e vá para o diretório raiz do projeto.
+docker-compose ps
+
+para verificar os logs
+
+docker-compose logs -f
+nc -zv kafka 9092
+nc -zv postgres 5432
+nc -zv mongo 27017
+
+# Verificar logs específicos dos contêineres Kafka, PostgreSQL e MongoDB:
+docker-compose logs kafka
+docker-compose logs postgres
+docker-compose logs mongo
+
+# reniciar conteineres
+docker-compose restart
+# Para parar os contêineres Docker e limpar os volumes
+docker-compose down -v
+
+# App1 Criar usuário (POST /users):
+curl -X POST http://localhost:8080/users -H "Content-Type: application/json" -d '{"name": "name", "email": "name@example.com", "password": "password"}'
+
+# Listar usuários (GET /users):
+
+curl http://localhost:8080/users
+
+# App2 (http://localhost:8081):
+
+Criar usuário (POST /users):
+
+curl -X POST http://localhost:8081/users -H "Content-Type: application/json" -d '{"name": "name", "email": "name@example.com", "password": "password"}'
+
+Listar usuários (GET /users):
+curl http://localhost:8081/users
+
+# Configurar o Grafana
+Acesse o Grafana em http://localhost:3000.
+Faça login com usuário admin e senha admin.
+Adicione um novo Data Source:
+Tipo: InfluxDB
+URL: http://influxdb:8086
+Database: telegraf
+Crie dashboards para visualizar as métricas coletadas pelo Telegraf

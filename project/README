@@ -72,3 +72,8 @@ Tipo: InfluxDB
 URL: http://influxdb:8086
 Database: telegraf
 Crie dashboards para visualizar as métricas coletadas pelo Telegraf
+
+#Dentro do contêiner do Grafana ou Telegraf, você pode usar ferramentas como curl ou telnet para verificar a conectividade com o InfluxDB:
+docker exec -it <grafana_container_id> /bin/bash
+curl http://influxdb:8086/ping
+

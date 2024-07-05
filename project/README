@@ -10,9 +10,14 @@ npm install express kafkajs mongoose
 docker-compose up --build
 
 # Verificar Permissões dos Volumes
+mkdir -p ./data/postgres ./data/mongo ./data/influxdb ./data/grafana
 sudo chown -R 472:472 ./data/grafana
 sudo chown -R 999:999 ./data/postgres
 sudo chown -R 999:999 ./data/mongo
+
+Remover imagens e volumes órfãos
+docker system prune -a -f
+docker volume prune -f
 
 # Após iniciar os contêineres, as APIs estarão rodando nas seguintes portas:
 
@@ -37,7 +42,11 @@ docker-compose logs mongo
 # reniciar conteineres
 docker-compose restart
 # Para parar os contêineres Docker e limpar os volumes
+remover imagem
+
 docker-compose down -v
+docker system prune -a
+docker volume prune
 
 # App1 Criar usuário (POST /users):
 curl -X POST http://localhost:8080/users -H "Content-Type: application/json" -d '{"name": "name", "email": "name@example.com", "password": "password"}'
